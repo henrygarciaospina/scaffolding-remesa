@@ -9,6 +9,9 @@ import reactor.core.publisher.Mono;
 import javax.swing.text.html.Option;
 import java.net.http.HttpResponse;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static reactor.core.publisher.Flux.*;
@@ -25,18 +28,27 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
     @Override
     public Flux<Customer> findAll() {
-        Stream<Customer> customers = getCustomers();
-        return  customers;
+        List<Customer> customers = getCustomers().collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        return Flux.fromIterable(customers);
     }
 
     private Stream<Customer> getCustomers(){
         return Stream.of(
                 Customer.builder()
-                        .id("10140004")
-                        .name("Steve Jobs").build(),
+                        .id("10010001")
+                        .name("Henry Gosling").build(),
                 Customer.builder()
-                        .id("10120001")
-                        .name("Gosling").build()
+                        .id("10020002")
+                        .name("Dennis Ritchie").build(),
+                Customer.builder()
+                        .id("10030003")
+                        .name("Bjarne Stroustrup").build(),
+                Customer.builder()
+                        .id("10040004")
+                        .name("Linus Torvalds").build(),
+                Customer.builder()
+                        .id("10050005")
+                        .name("Richard Stallman").build()
         );
     }
 }
